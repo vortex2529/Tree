@@ -1,0 +1,42 @@
+#include <iostream>
+using namespace std;
+
+class Node{
+    public:
+
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int _data):data(_data),left(NULL),right(NULL){}
+
+};
+
+
+Node* buildTree(){
+  int data;
+  cout<<"Enter the data:"<<endl;
+  cin>> data;
+
+  if(data == -1){
+    return NULL;
+  }
+
+  Node* root = new Node(data);
+  cout<<"Enter the left part "<<data<<endl;
+  root->left = buildTree();
+  cout<<"Enter the right part "<<data<<endl;
+  root->right = buildTree();
+
+  cout<<"completed"<<endl;
+  return root;
+}
+
+
+int main() {
+  Node* root = NULL;
+  root = buildTree();
+  
+
+  return 0;
+}
