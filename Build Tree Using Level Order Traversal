@@ -22,8 +22,8 @@ Node* buildTree_Using_Recursion(){
   }
 
   Node* root = new Node(data);
-  root->left = buildTree();
-  root->right = buildTree();
+  root->left = buildTree_Using_Recursion();
+  root->right = buildTree_Using_Recursion();
   return root;
 }
 
