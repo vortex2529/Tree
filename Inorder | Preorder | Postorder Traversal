@@ -1,0 +1,111 @@
+#include <iostream>
+#include <queue>
+using namespace std;
+
+class Node{
+    public:
+
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int _data):data(_data),left(NULL),right(NULL){}
+
+};
+
+
+Node* buildTree(){
+  int data;
+  cin>> data;
+  if(data == -1){
+    return NULL;
+  }
+
+  Node* root = new Node(data);
+  root->left = buildTree();
+  root->right = buildTree();
+  return root;
+}
+
+
+void preorder(Node* root){
+  if(!root){
+    return;
+  }
+  cout<<root->data<<" ";
+  preorder(root->left);
+  preorder(root->right);
+
+}
+
+void inorder(Node* root){
+  if(!root){
+    return;
+  }
+  inorder(root->left);
+  cout<<root->data<<" ";
+  inorder(root->right);
+
+}
+
+void postorder(Node* root){
+  if(!root){
+    return;
+  }
+  postorder(root->left);
+  postorder(root->right);
+  cout<<root->data<<" ";
+
+}
+void LevelOrderTraversal_PrintLevelWise(Node* root){
+  queue<Node*> q;
+
+  q.push(root);
+  q.push(NULL);
+
+  while(!q.empty()){
+
+    Node* temp = q.front();
+    q.pop();
+    if(temp == NULL){
+      cout<<endl;
+      if(!q.empty()){
+        q.push(NULL);
+      }
+    }
+    else{
+      cout<<temp->data<<" ";
+      if(temp->left){
+        q.push(temp->left);
+      }
+      if(temp->right){
+        q.push(temp->right);
+      }
+    } 
+  }
+}
+
+int main() {
+  Node* root = NULL;
+  root = buildTree();
+
+
+  cout<<"Printing Level Order Traversal Levelwise: "<<endl;
+  LevelOrderTraversal_PrintLevelWise(root);
+  cout<<endl;
+
+  cout<<"Printing InOrder Traversal: ";
+  inorder(root);
+  cout<<endl;
+
+  cout<<"Printing PreOrder Traversal: ";
+  preorder(root);
+  cout<<endl;
+
+  cout<<"Printing PostOrder Traversal: ";
+  postorder(root);
+  cout<<endl;
+
+
+  return 0;
+}
