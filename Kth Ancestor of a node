@@ -1,0 +1,34 @@
+class Solution {
+  public:
+  
+    int ans = -1;
+    
+    int solve(Node* root,int &k,int node){
+        if(!root) return -1;
+        
+        if(node == root->data){
+            return root->data;
+        }
+        
+        int left = solve(root->left,k,node);
+        int right = solve(root->right,k,node);
+        
+        if(left == -1 && right == -1){
+            return -1;
+        }
+        
+        k--;
+        
+        if(k==0) {
+            ans = root->data;
+            return -1;
+        }
+        
+        return left != -1?left:right;
+    }
+    int kthAncestor(Node *root, int k, int node) {
+        
+        solve(root,k,node);
+        return ans;
+    }
+};
