@@ -1,0 +1,41 @@
+class Solution {
+public:
+
+    void pathSum_helper(TreeNode* root,int targetSum,int &currSum,vector<int> &temp,vector<vector<int>>&ans){
+        if(!root){
+            return;
+        }
+
+        if(!root->left && !root->right){
+            currSum += root->val;
+            temp.push_back(root->val);
+            if(currSum == targetSum){
+                ans.push_back(temp);
+            }
+            currSum -= root->val;
+            temp.pop_back();
+            return;
+        }
+
+        currSum += root->val;
+        temp.push_back(root->val);
+
+        pathSum_helper(root->left,targetSum,currSum,temp,ans);
+        pathSum_helper(root->right,targetSum,currSum,temp,ans);
+
+        currSum -= root->val;
+        temp.pop_back();
+
+        
+    }
+
+    vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
+        vector<vector<int>> ans;
+        vector<int> temp;
+        int currSum = 0;
+        pathSum_helper(root,targetSum,currSum,temp,ans);
+
+        return ans;
+
+    }
+};
