@@ -1,0 +1,20 @@
+class Solution {
+  public:
+    int sum(Node* root){
+        if(!root) return 0;
+        
+        
+        return sum(root->left)+sum(root->right)+root->data;
+    }
+    bool isSumTree(Node* root) {
+        if(!root) return true;
+        
+        if(!root->left && !root->right) return true;
+        
+        bool leftAns = isSumTree(root->left);
+        bool rightAns = isSumTree(root->right);
+        bool currAns = (root->data == sum(root->left)+sum(root->right));
+
+        return (currAns && leftAns && rightAns);
+    }
+};
