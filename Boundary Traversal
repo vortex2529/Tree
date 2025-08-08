@@ -1,0 +1,99 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+
+class Node{
+    public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int _data):data(_data),left(NULL),right(NULL){}
+};
+
+
+
+
+Node* buildTree(){
+  int data;
+  cin>>data;
+
+  if(data == -1){
+    return NULL;
+  }
+
+  Node* root = new Node(data);
+  root->left = buildTree();
+  root->right = buildTree();
+  return root;
+}
+
+
+
+void printleftNodes(Node* root,vector<int>&ans){
+  if(!root) return;
+
+  if(!root->left && !root->right){
+    return;
+  }
+  ans.push_back(root->data);
+  if(root->left) {
+    printleftNodes(root->left,ans);
+  }
+  else{
+    printleftNodes(root->right,ans);
+  }
+}
+
+void printRightNodes(Node* root,vector<int>&ans){
+  if(!root) return;
+
+  if(!root->left && !root->right){
+    return;
+  }
+  if(root->right) {
+    printRightNodes(root->right,ans);
+  }
+  else{
+    printRightNodes(root->left,ans);
+  }
+  ans.push_back(root->data);
+}
+
+void printLeafNodes(Node* root,vector<int>&ans){
+  if(!root) return;
+
+  if(!root->left && !root->right){
+    ans.push_back(root->data);
+    return;
+  }
+
+  printLeafNodes(root->left,ans);
+  printLeafNodes(root->right,ans);
+}
+
+
+void printBoundaryTraversal(Node* root){
+  if(!root) return;
+
+  vector<int> ans;
+  printleftNodes(root,ans);
+  printLeafNodes(root,ans);
+  printRightNodes(root,ans);
+
+  ans.pop_back();
+
+  cout<<"Printing Boundary Traversal :"<<endl;
+  for(auto e:ans) cout<<e<<" ";
+  cout<<endl;
+}
+
+int main() {
+  Node* root = buildTree();
+
+  printBoundaryTraversal(root);
+
+  
+  return 0;
+}
