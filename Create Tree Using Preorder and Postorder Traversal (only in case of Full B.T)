@@ -1,0 +1,115 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <unordered_map>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int _data) : data(_data), left(NULL), right(NULL) {}
+};
+
+void LevelOrderTraversal_PrintLevelWise(Node* root) {
+    if (!root) return;
+
+    queue<Node*> q;
+    q.push(root);
+    q.push(NULL);
+
+    while (!q.empty()) {
+        Node* temp = q.front(); q.pop();
+
+        if (temp == NULL) {
+            cout << endl;
+            if (!q.empty()) q.push(NULL);
+        } else {
+            cout << temp->data << " ";
+            if (temp->left) q.push(temp->left);
+            if (temp->right) q.push(temp->right);
+        }
+    }
+}
+
+int findPos(vector<int>& postorder, int n, int element) {
+    for (int i = 0; i < n; i++) {
+        if (postorder[i] == element)
+            return i;
+    }
+    return -1;
+}
+
+// Brute-force version
+Node* buildtreeUsingPreorderPostorder(vector<int>& preorder, vector<int>& postorder, int& size, int& preIndex, int postStart, int postEnd) {
+    if (preIndex >= size || postStart > postEnd)
+        return NULL;
+
+    int element = preorder[preIndex++];
+    Node* root = new Node(element);
+
+    if (postStart == postEnd || preIndex >= size)
+        return root;
+
+    int nextElement = preorder[preIndex];
+    int pos = findPos(postorder, size, nextElement);
+
+    root->left = buildtreeUsingPreorderPostorder(preorder, postorder, size, preIndex, postStart, pos);
+    root->right = buildtreeUsingPreorderPostorder(preorder, postorder, size, preIndex, pos + 1, postEnd - 1);
+
+    return root;
+}
+
+// Optimized version using map
+Node* buildtreeUsingPreorderPostorder_withMap(vector<int>& preorder, vector<int>& postorder, int& size, int& preIndex, int postStart, int postEnd, unordered_map<int, int>& postMap) {
+    if (preIndex >= size || postStart > postEnd)
+        return NULL;
+
+    int element = preorder[preIndex++];
+    Node* root = new Node(element);
+
+    if (postStart == postEnd || preIndex >= size)
+        return root;
+
+    int nextElement = preorder[preIndex];
+    int pos = postMap[nextElement];
+
+    root->left = buildtreeUsingPreorderPostorder_withMap(preorder, postorder, size, preIndex, postStart, pos, postMap);
+    root->right = buildtreeUsingPreorderPostorder_withMap(preorder, postorder, size, preIndex, pos + 1, postEnd - 1, postMap);
+
+    return root;
+}
+
+int main() {
+    vector<int> preorder = {1, 2, 4, 5, 3, 6, 7};
+    vector<int> postorder = {4, 5, 2, 6, 7, 3, 1};
+
+    int size = preorder.size();
+    int preIndex1 = 0;
+    int postStart = 0;
+    int postEnd = size - 1;
+
+    // Brute force
+    Node* root = buildtreeUsingPreorderPostorder(preorder, postorder, size, preIndex1, postStart, postEnd);
+
+    // Optimized using map
+    unordered_map<int, int> postMap;
+    for (int i = 0; i < size; i++) {
+        postMap[postorder[i]] = i;
+    }
+
+    int preIndex2 = 0;
+    Node* root1 = buildtreeUsingPreorderPostorder_withMap(preorder, postorder, size, preIndex2, postStart, postEnd, postMap);
+
+    cout << "Printing tree created from Preorder & Postorder Traversal (Brute Force):" << endl;
+    LevelOrderTraversal_PrintLevelWise(root);
+    cout << endl;
+
+    cout << "Printing tree created from Preorder & Postorder Traversal using Map (Optimized):" << endl;
+    LevelOrderTraversal_PrintLevelWise(root1);
+    cout << endl;
+
+    return 0;
+}
