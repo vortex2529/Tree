@@ -1,0 +1,91 @@
+#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+
+class Node{
+    public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int _data):data(_data),left(NULL),right(NULL){}
+};
+
+
+
+void printRightViewUsingLOT(Node* root){
+  if(!root) return;
+
+  queue<Node*> q;
+  q.push(root);
+  q.push(NULL);
+
+  bool firstNode = true;
+  while(!q.empty()){
+    Node* temp = q.front();
+    q.pop();
+
+    if(temp == NULL){
+      if(!q.empty()){
+        q.push(NULL);
+        firstNode = true;
+      }
+    }
+    else{
+
+      if(firstNode){
+        cout<<temp->data<<" ";
+        firstNode = false;
+      }
+
+      if(temp->right){
+        q.push(temp->right);
+      }
+      if(temp->left){
+        q.push(temp->left);
+      }
+    }
+  }
+}
+
+void printRightViewUsingRecursion(Node* root,vector<int> &ans,int level){
+  if(!root) return;
+
+  if(level == ans.size()){
+    ans.push_back(root->data);
+  }
+
+  printRightViewUsingRecursion(root->right,ans,level+1);
+  printRightViewUsingRecursion(root->left,ans,level+1);
+
+}
+
+Node* buildTree(){
+  int data;
+  cin>>data;
+
+  if(data == -1){
+    return NULL;
+  }
+
+  Node* root = new Node(data);
+  root->left = buildTree();
+  root->right = buildTree();
+  return root;
+}
+
+int main() {
+  Node* root = buildTree();
+
+  cout<<"Printing Right View Using Level Order Traversal :"<<endl;
+  printRightViewUsingLOT(root);
+  cout<<endl;
+
+  cout<<"Printing Right View Using Recursion :"<<endl;
+  vector<int> ans;
+  printRightViewUsingRecursion(root,ans,0);
+  for(auto e:ans) cout<<e<<" ";
+  cout<<endl;
+  return 0;
+}
