@@ -1,0 +1,100 @@
+// Naive approach 
+#include <iostream>
+#include <map>
+#include <queue>
+#include <vector>
+using namespace std;
+
+
+class Node{
+    public:
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int _data):data(_data),left(NULL),right(NULL){}
+};
+
+
+Node* buildTree(){
+  int data;
+  cin>>data;
+
+  if(data == -1){
+    return NULL;
+  }
+
+  Node* root = new Node(data);
+
+  root->left = buildTree();
+  root->right = buildTree();
+  return root;
+}
+
+void DiagnaolTraversal_UsingMap(Node* root){
+    if(!root) return;
+
+    queue<pair<Node*,int>> q;
+    map<int,vector<int>> mp;
+
+    q.push({root,0});
+
+    while(!q.empty()){
+      auto front = q.front();
+      q.pop();
+
+      Node* temp = front.first;
+      int hd = front.second;
+
+      mp[hd].push_back(temp->data);
+
+      if(temp->left){
+        q.push({temp->left,hd+1});
+      }
+      if(temp->right){
+        q.push({temp->right,hd});
+      }
+    }
+
+    cout<<"Printing answer :"<<endl;
+    for(auto &e:mp){
+      cout<<e.first<<"->";
+      for(auto val:e.second){
+        cout<<val<<" ";
+      }
+      cout<<endl;
+    }
+}
+
+int main() {
+    Node* root = buildTree();
+
+    DiagnaolTraversal_UsingMap(root);
+}
+
+
+// Optimized approach  gfg problem 
+class Solution {
+  public:
+    vector<int> diagonal(Node *root) {
+        vector<int> ans;
+        if(!root) return ans;
+        queue<Node*> q;
+        q.push(root);
+        
+        while(!q.empty()){
+            Node* temp = q.front();
+            q.pop();
+            
+            while(temp){
+                ans.push_back(temp->data);
+                if(temp->left) q.push(temp->left);
+                
+                temp = temp->right;
+            }
+        }
+        
+        return ans;
+        
+    }
+};
