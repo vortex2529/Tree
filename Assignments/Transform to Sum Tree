@@ -1,0 +1,24 @@
+class Solution {
+  public:
+
+   
+    int sum(Node* root){
+        if(!root) return 0;
+        if(!root->left && !root->right){
+            int val = root->data;
+            root->data = 0;
+            return val;
+        }
+        
+        int left = sum(root->left);
+        int right = sum(root->right);
+        
+        int val = root->data;
+        root->data = left+right;
+        return root->data + val;
+    }
+    void toSumTree(Node *node) {
+        sum(node);
+        
+    }
+};
