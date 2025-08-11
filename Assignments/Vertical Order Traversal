@@ -1,0 +1,42 @@
+class Solution {
+public:
+    vector<vector<int>> verticalTraversal(TreeNode* root) {
+        vector<vector<int>> ans;
+
+        if(!root) return ans;
+        
+        map<int,map<int,multiset<int>>> mp;
+        queue<pair<TreeNode*,pair<int,int>>> q;
+
+        q.push({root,{0,0}});
+
+        while(!q.empty()){
+            auto temp = q.front();
+            q.pop();
+
+            auto node = temp.first;
+            int row = temp.second.first;
+            int col = temp.second.second; 
+
+            mp[col][row].insert(node->val);
+            if(node->left){
+                q.push({node->left,{row+1,col-1}});
+            }
+            if(node->right){
+                q.push({node->right,{row+1,col+1}});
+            }
+
+        }
+
+        for(auto it:mp){
+            auto colmap = it.second;
+            vector<int> temp;
+            for(auto colmapit:colmap){
+                auto& mset = colmapit.second;
+                temp.insert(temp.end(),mset.begin(),mset.end());
+            }
+            ans.push_back(temp);
+        }
+        return ans;
+    }
+};
