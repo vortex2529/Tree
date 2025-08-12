@@ -1,0 +1,20 @@
+class Solution {
+  public:
+    pair<int,int> solve(Node* root){
+        if(!root) return {0,0};
+        
+        auto left = solve(root->left);
+        auto right = solve(root->right);
+        // IncludedSum
+        int a = root->data + left.second + right.second;
+        // ExcludedSum
+        int b = max(left.first,left.second)+max(right.first,right.second);
+        return {a,b};
+    }
+    int getMaxSum(Node *root) {
+        auto ans = solve(root);
+        return max(ans.first,ans.second);
+        
+        
+    }
+};
