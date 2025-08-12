@@ -1,0 +1,40 @@
+class Solution {
+public:
+    vector<int> inorderTraversal(TreeNode* root) {
+        vector<int> ans;
+
+        TreeNode* curr = root;
+        while(curr){
+            // if left node NULL, then visit it, and go right
+            if(!curr->left){
+                ans.push_back(curr->val);
+                curr = curr->right;
+            }
+            // left  is Not NULL,
+            else{
+                // find predecessor
+                TreeNode* pred = curr->left;
+                while(pred->right != curr && pred->right){
+                    pred = pred -> right;
+                }
+
+                // if pred-> right node is NULL, then go left after establishing link from pred to curr
+                if(!pred->right){
+                    pred->right = curr;
+                    curr = curr->left;
+                }
+                else{
+                    // left is already visited, then go right after visiting curr Node, and remove links
+                    pred->right = nullptr;
+                    ans.push_back(curr->val);
+                    curr = curr->right;
+                }
+
+                  
+            }
+            
+        }
+
+        return ans;
+    }
+};
