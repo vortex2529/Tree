@@ -1,0 +1,76 @@
+
+class Solution {
+  public:
+    
+    Node* makeNodeToParentMappingAndFindTargetNode(Node* root,unordered_map<Node*,Node*> &parentMap,int target){
+        queue<Node*> q;
+        q.push(root);
+        Node* targetNode = 0;
+        parentMap[root] = 0;
+        while(!q.empty()){
+            Node* temp = q.front();q.pop();
+            if(temp->data == target){
+                targetNode = temp;
+            }
+            
+            if(temp->left){
+                q.push(temp->left);
+                parentMap[temp->left] = temp;
+            }
+            if(temp->right){
+                q.push(temp->right);
+                parentMap[temp->right] = temp;
+            }
+            
+        }
+        
+        return targetNode;
+        
+    }
+    
+    int burnTree(unordered_map<Node*,Node*> &parentMap,Node* targetNode){
+        unordered_map<Node*,bool> isburnt;
+        queue<Node*> q;
+        int time=0;
+        
+        q.push(targetNode);
+        isburnt[targetNode] = 1;
+        while(!q.empty()){
+            int size = q.size();
+            bool isFireSpreaded = 0;
+            for(int i=0;i<size;i++){
+                Node* front = q.front();q.pop();
+                
+                if(front->left && !isburnt[front->left]){
+                    q.push(front->left);
+                    isburnt[front->left] = 1;
+                    isFireSpreaded = 1;
+                }
+                if(front->right && !isburnt[front->right]){
+                    q.push(front->right);
+                    isburnt[front->right] = 1;
+                    isFireSpreaded = 1;
+                }
+                if(parentMap[front] && !isburnt[parentMap[front]]){
+                    q.push(parentMap[front]);
+                    isburnt[parentMap[front]] = 1;
+                    isFireSpreaded = 1;
+                }
+                
+            }
+            
+            if(isFireSpreaded) time++;
+        }
+        return time;
+        
+    }
+    int minTime(Node* root, int target) {
+        unordered_map<Node*,Node*> parentMap;
+        
+        Node* targetNode = makeNodeToParentMappingAndFindTargetNode(root,parentMap,target);
+        
+        
+        int timeRequired = burnTree(parentMap,targetNode);
+        return timeRequired;
+    }
+};
